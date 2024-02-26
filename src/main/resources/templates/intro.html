@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TODAYTONIGHT</title>
+  <script>
+    const redirectTo = sessionStorage.getItem("accessPage") || "/main";
+
+    // HTTP
+    function getHeaders() {
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      const token = localStorage.getItem('token');
+      if (token) {
+        headers.append('Authorization', 'Bearer ' + token);
+      }
+      return headers;
+    }
+
+    //
+    async function authenticatedRequest() {
+
+      try {
+        const response = await fetch('/auth', {
+          method: 'post',
+          headers: getHeaders()
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.removeItem('token');
+          localStorage.setItem('token', data.token);
+          sessionStorage.removeItem("accessPage")
+          window.location.href = redirectTo;
+        } else {
+          console.log(data.error);
+          localStorage.removeItem('token');
+          window.location.href = redirectTo;
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+        localStorage.removeItem('token');
+        window.location.href = redirectTo;
+      }
+    }
+
+    async function oauth2success() {
+      try {
+        const oauthValue = getQueryParam('oauth');
+        const response = await fetch(`/oauth?oauth=${oauthValue}`, {
+          method: 'POST',
+          headers: getHeaders()
+        });
+
+        const data = await response.json();
+
+        localStorage.removeItem('token');
+        localStorage.setItem('token', data.token);
+        window.location.href = '/main';
+
+      } catch (error) {
+        console.error('An error occurred:', error);
+        window.location.href = '/main';
+      }
+    }
+
+    function getQueryParam(parameterName) {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      return urlParams.get(parameterName);
+    }
+
+    const oauthValue = getQueryParam('oauth');
+
+    if (localStorage.getItem('token')) {
+      authenticatedRequest();
+    } else if(oauthValue === 'true') {
+      oauth2success();
+    } else {
+      window.location.href = redirectTo;
+    }
+
+  </script>
+</head>
+<body>
+</body>
+</html>

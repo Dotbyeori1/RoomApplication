@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragmentsAdmin/layout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .fieldError {
+            color: #bd2130;
+        }
+    </style>
+</th:block>
+
+<div layout:fragment="content">
+
+    <div class="dashboard-area section-bg-2 pat-100 pab-100">
+        <div class="container">
+            <div class="dashboard-contents-wrapper">
+                <div class="dashboard-right-contents mt-4 mt-lg-0">
+                    <div class="dashboard-reservation">
+                        <div class="single-reservation bg-white base-padding">
+                            <h1>리뷰 관리</h1>
+                            <div class="table-responsive" style="margin-top: 20px;">
+                                <table class="table table-hover">
+                                    <th:block th:each="dto : ${pageResult.dtoList}">
+                                        <tr class="table-primary">
+                                            <th>#</th>
+                                            <td th:text="${dto.rbno}"></td>
+                                            <th>
+                                                이름
+                                            </th>
+                                            <td>
+                                                [[${dto.writerName}]]
+                                                <small class="text-muted" th:text="${dto.writerEmail}"></small>
+                                            </td>
+                                            <th>
+                                                등록일
+                                            </th>
+                                            <td th:text="${#temporals.format(dto.regDate, 'yyyy/MM/dd')}"></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModal" height="20px">
+                                                    답변하기
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="table-light">
+                                            <td colspan="7">
+                                                [[${dto.content}]]
+                                            </td>
+                                        </tr>
+                                        <tr class="table-light" th:each="replies : ${dto.replies}"
+                                            th:if="${replies} != null">
+                                            <td colspan="7">
+                                                └ [[${replies.text}]]
+                                            </td>
+                                        </tr>
+                                        <div class="modal fade" id="exampleModal" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="/seller/accommodation/reviews" method="post">
+                                                        <input hidden="hidden" name="rbno" th:value="${dto.rbno}">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">답변하기</h5>
+                                                            <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <textarea class="form-control" rows="5" name="text" width="100%"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">답변하기</button>
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">취소
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </table>
+                            </div>
+
+                            <!--페이징 처리-->
+                            <nav>
+                                <ul class="pagination pagination-dark justify-content-center">
+                                    <!-- 'Previous' 버튼 수정 -->
+                                    <li th:class="${pageResult.prev} ? 'page-item' : 'page-item disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/seller/accommodation/reviews(page=${pageResult.page - 1})}">
+                                            Previous
+                                        </a>
+                                    </li>
+
+                                    <!-- 페이지네이션 시작 페이지 및 끝 페이지 계산 -->
+                                    <th:block
+                                            th:with="startPage=${pageResult.page - 5}, endPage=${pageResult.page + 5}">
+
+                                        <!-- 시작 페이지부터 끝 페이지까지 페이지 목록 생성 -->
+                                        <li th:each="page: ${#numbers.sequence(1, pageResult.totalPage)}"
+                                            th:if="${page >= startPage and page <= endPage}"
+                                            th:class="${pageResult.page == page} ? 'page-item active' : 'page-item'">
+                                            <a class="page-link"
+                                               th:href="@{/seller/accommodation/reviews(page=${page})}">
+                                                [[${page}]]
+                                            </a>
+                                        </li>
+
+                                    </th:block>
+
+                                    <!-- 'Next' 버튼 수정 -->
+                                    <li th:class="${pageResult.next} ? 'page-item' : 'page-item disabled'">
+                                        <a class="page-link"
+                                           th:href="@{/seller/accommodation/reviews(page=${pageResult.page + 1})}">
+                                            Next
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dashboard area end -->
+
+    <script th:inline="javascript">
+
+        var msg = [[${msg}]];
+
+        console.log(msg);
+
+        if (msg) {
+            $(".modal").modal();
+        }
+        var searchForm = $("#searchForm");
+
+        $('.btn-primary').click(function (e) {
+
+            searchForm.submit();
+
+        });
+
+        $('.btn-outline-primary').click(function (e) {
+
+            searchForm.empty().submit();
+
+        });
+
+
+    </script>
+
+</div>
+
+
+</html>

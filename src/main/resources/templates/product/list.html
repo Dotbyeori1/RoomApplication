@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout1}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .fieldError {
+            color: #bd2130;
+        }
+
+        .badge-info, .badge-secondary {
+            color: #000;
+        }
+    </style>
+</th:block>
+<div layout:fragment="content">
+
+    <!-- Hotel List area start -->
+    <div class="responsive-overlay"></div>
+    <section class="hotel-list-area section-bg-2 pat-50 pab-100">
+        <div class="container">
+            <div class="shop-contents-wrapper mt-5">
+                <div class="shop-sidebar-content">
+                    <div class="shop-close-content">
+                        <div class="single-shop-left bg-white radius-10 mt-4">
+                            <form th:action="@{/product/list}" method="get" id="searchForm"
+                                  onsubmit="disableDaterangeInput()" class="single-shop-left-inner mt-4">
+                                <input type="hidden" id="tagValue" name="tag" value="">
+                                <div class="row-cols-auto mab-20">
+                                    <button id="submitBtn" type="submit" class="btn btn-primary col-5">적용하기</button>
+                                    <button type="button" class="btn btn-outline-primary col-5" id="clear">초기화
+                                    </button>
+                                </div>
+                                <div class="single-shop-left-title open">
+                                    <h5 class="title"> 숙박기간 </h5>
+                                    <input th:if="${param.category != null}" type="hidden" name="category"
+                                           th:value="${param.category}">
+                                    <input th:if="${param.region != null}" type="hidden" name="region"
+                                           th:value="${param.region}"/>
+                                    <input type="hidden" name="StartDate" th:value="${date.StartDate}"/>
+                                    <input type="hidden" name="EndDate" th:value="${date.EndDate}"/>
+                                    <ul class="single-shop-left-list active-list list-style-none">
+                                        <li class="item-search">
+                                            <input type="text" class="form--control" name="daterange"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="single-shop-left-title open">
+                                    <h5 class="title"> 가격 </h5>
+                                    <div class="single-shop-left-inner mt-4">
+                                        <div class="price-range-slider" data-min="0" data-max="1000000"
+                                             data-step="1000">
+                                            <div class="ui-range-slider"></div>
+                                            <div class="ui-range-slider-footer">
+                                                <div class="ui-range-values">
+                                                    <span class="ui-price-title"> 가격: </span>
+                                                    <div class="ui-range-value-min">
+                                                        <span class="min_price"
+                                                              th:text="${param.inputedMinprice != null ? param.inputedMinprice : 0}"/>원
+                                                        <input type="hidden" name="inputedMinprice"
+                                                               class="min_price_input"
+                                                               th:value="${param.inputedMinprice}">
+                                                    </div>
+                                                    -
+                                                    <div class="ui-range-value-max">
+                                                        <span class="max_price"
+                                                              th:text="${param.inputedMaxprice != null ? param.inputedMaxprice : 1000000}"/>원
+                                                        <input type="hidden" name="inputedMaxprice"
+                                                               class="max_price_input"
+                                                               th:value="${param.inputedMaxprice}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="single-shop-left-title open mat-20">
+                                    <h5 class="title"> 옵션선택 </h5>
+                                    <div class="single-shop-left-inner margin-top-15">
+                                        <ul class="list-style-none mat-10">
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="1" id="freeWifi">
+                                                <label class="form-check-label" for="freeWifi">와이파이</label>
+                                            </li>
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="2" id="pool">
+                                                <label class="form-check-label" for="pool">수영장</label>
+                                            </li>
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="4" id="breakfast">
+                                                <label class="form-check-label" for="breakfast">아침</label>
+                                            </li>
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="8" id="parking">
+                                                <label class="form-check-label" for="parking">주차장</label>
+                                            </li>
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="16" id="gym">
+                                                <label class="form-check-label" for="gym">체육관</label>
+                                            </li>
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="32" id="seaview">
+                                                <label class="form-check-label" for="seaview">바다뷰</label>
+                                            </li>
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="64" id="lakeview">
+                                                <label class="form-check-label" for="lakeview">호수뷰</label>
+                                            </li>
+                                            <li class="item mat-10">
+                                                <input class="form-check-input" type="checkbox" value="128" id="nosmoking">
+                                                <label class="form-check-label" for="nosmoking">금연</label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="shop-grid-contents">
+                    <div id="tab-list" class="tab-content-item mt-4 active">
+                        <div class="row gy-4">
+                            <th:block th:each="dto : ${pageResult.dtoList}">
+                                <div class="col-12">
+                                    <div class="hotel-view bg-white radius-20">
+                                        <div class="hotel-view-flex" th:if="${not #lists.isEmpty(dto.imgDTOList)}">
+                                            <a th:href="@{/product/{ano}(ano=${dto.ano},StartDate=${date.StartDate},EndDate=${date.EndDate})}">
+                                                <img th:src="'/imgtest/' + ${dto.imgDTOList[0].imgfile}"
+                                                     th:alt="${dto.name}"
+                                                     class="hotel-view-thumb hotel-view-list-thumb bg-image"
+                                                     width="300px" height="326px"/>
+                                            </a>
+                                            <div class="hotel-view-contents">
+                                                <div class="hotel-view-contents-header">
+                                                    <div class="hotel-view-contents-header-flex d-flex flex-wrap gap-3 align-items-center justify-content-between">
+                                                    <span class="hotel-view-contents-review"> <i
+                                                            class="las la-star"></i> [[${dto.grade}]] <span
+                                                            class="hotel-view-contents-review-count"> ([[${dto.reviewcount}]]) </span> </span>
+                                                        <div class="btn-wrapper">
+                                                            <a th:href="@{/product/{ano}(ano=${dto.ano},StartDate=${date.StartDate},EndDate=${date.EndDate})}"
+                                                               class="cmn-btn btn-bg-1 btn-small">
+                                                                예약하기 </a>
+                                                        </div>
+                                                    </div>
+                                                    <h3 class="hotel-view-contents-title"><a
+                                                            th:href="@{/product/{ano}(ano=${dto.ano},StartDate=${date.StartDate},EndDate=${date.EndDate})}">
+                                                        [[${dto.name}]] </a></h3>
+                                                    <div class="hotel-view-contents-location mt-2">
+                                                    <span class="hotel-view-contents-location-icon"> <i
+                                                            class="las la-map-marker-alt"></i> </span>
+                                                        <span class="hotel-view-contents-location-para"> [[${dto.address}]]  </span>
+                                                    </div>
+                                                </div>
+                                                <div class="hotel-view-contents-bottom">
+                                                    <div class="hotel-view-contents-bottom-flex">
+                                                        <div class="hotel-view-contents-bottom-contents d-flex flex-wrap gap-4 gap-sm-1">
+                                                            <h4 class="hotel-view-contents-bottom-title">
+                                                                [[${dto.minPrice}]]
+                                                                <sub>원</sub></h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col">
+                                <div class="pagination-wrapper">
+                                    <ul class="pagination-list list-style-none">
+                                        <!-- 'Previous' 버튼 수정 -->
+                                        <li th:class="${pageResult.prev} ? 'pagination-list-item-prev active' : 'pagination-list-item-prev'">
+                                            <a th:href="@{/product/list(page=${pageResult.page - 1}, category=${param.category}? ${param.category} : null,
+                                                region=${param.region}? ${param.region} : null, tag=${param.tag}? ${param.tag} : null,
+                                                inputedMinprice=${param.inputedMinprice}? ${param.inputedMinprice} : 0,
+                                                inputedMaxprice=${param.inputedMaxprice}? ${param.inputedMaxprice} : 1000000)}"
+                                               class="pagination-list-item-button"> Prev </a>
+                                        </li>
+
+                                        <!-- 페이지네이션 시작 페이지 및 끝 페이지 계산 -->
+                                        <th:block
+                                                th:with="startPage=${pageResult.page - 5}, endPage=${pageResult.page + 5}">
+
+                                            <!-- 시작 페이지부터 끝 페이지까지 페이지 목록 생성 -->
+                                            <li th:each="page: ${#numbers.sequence(1, pageResult.totalPage)}"
+                                                th:if="${page >= startPage and page <= endPage}"
+                                                th:class="${pageResult.page == page} ? 'pagination-list-item active' : 'pagination-list-item'">
+                                                <a th:href="@{/product/list(page=${page}, category=${param.category}? ${param.category} : null,
+                                                region=${param.region}? ${param.region} : null, tag=${param.tag}? ${param.tag} : null,
+                                                inputedMinprice=${param.inputedMinprice}? ${param.inputedMinprice} : 0,
+                                                inputedMaxprice=${param.inputedMaxprice}? ${param.inputedMaxprice} : 1000000)}"
+                                                   class="pagination-list-item-link"> [[${page}]] </a>
+                                            </li>
+
+                                        </th:block>
+
+                                        <!-- 'Next' 버튼 수정 -->
+                                        <li th:class="${pageResult.next} ? 'pagination-list-item-next active' : 'pagination-list-item-next'">
+                                            <a th:href="@{/product/list(page=${pageResult.page + 1}, category=${param.category}? ${param.category} : null,
+                                            region=${param.region}? ${param.region} : null, tag=${param.tag}? ${param.tag} : null,
+                                            inputedMinprice=${param.inputedMinprice}? ${param.inputedMinprice} : 0,
+                                            inputedMaxprice=${param.inputedMaxprice}? ${param.inputedMaxprice} : 1000000)}"
+                                               class="pagination-list-item-button"> Next </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $(function () {
+            let startDate = $('input[name="StartDate"]').val();
+            let endDate = $('input[name="EndDate"]').val();
+
+            // Check if the dates are valid
+            if (!moment(startDate, 'YYYY-MM-DD', true).isValid()) {
+                startDate = moment().format('YYYY-MM-DD');
+            }
+            if (!moment(endDate, 'YYYY-MM-DD', true).isValid()) {
+                endDate = moment().add(1, 'days').format('YYYY-MM-DD');
+            }
+
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left',
+                startDate: moment(startDate, 'YYYY-MM-DD'),
+                endDate: moment(endDate, 'YYYY-MM-DD')
+            }, function (start, end, label) {
+                startDate = start.format('YYYY-MM-DD');
+                endDate = end.format('YYYY-MM-DD');
+
+                $('input[name="StartDate"]').val(startDate);
+                $('input[name="EndDate"]').val(endDate);
+            });
+        });
+
+        function disableDaterangeInput() {
+            $('input[name="daterange"]').prop('disabled', true);
+        }
+
+        var searchForm = $("#searchForm");
+        $('#clear').click(function (e) {
+
+            searchForm.empty().submit();
+
+        });
+
+
+    </script>
+    <script th:inline="javascript">
+        var inputedMinprice = /*[[${param.inputedMinprice}]]*/ null;
+        var inputedMaxprice = /*[[${param.inputedMaxprice}]]*/ null;
+
+        var priceRangeSlider = document.querySelector('.price-range-slider');
+        priceRangeSlider.dataset.startMin = (inputedMinprice !== null) ? inputedMinprice.toString() : '0';
+        priceRangeSlider.dataset.startMax = (inputedMaxprice !== null) ? inputedMaxprice.toString() : '1000000';
+    </script>
+    <script th:inline="javascript">
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let freeWifi = document.getElementById('freeWifi');
+            let pool = document.getElementById('pool');
+            let breakfast = document.getElementById('breakfast');
+            let parking = document.getElementById('parking');
+            let gym = document.getElementById('gym');
+            let seaview = document.getElementById('seaview');
+            let lakeview = document.getElementById('lakeview');
+            let nosmoking = document.getElementById('nosmoking');
+            let tagValue = document.getElementById('tagValue');
+
+            let value = 0;
+
+            if (freeWifi.checked) {
+                value += parseInt(freeWifi.value);
+            }
+            if (pool.checked) {
+                value += parseInt(pool.value);
+            }
+            if (breakfast.checked) {
+                value += parseInt(breakfast.value);
+            }
+            if (parking.checked) {
+                value += parseInt(parking.value);
+            }
+            if (gym.checked) {
+                value += parseInt(gym.value);
+            }
+            if (seaview.checked) {
+                value += parseInt(seaview.value);
+            }
+            if (lakeview.checked) {
+                value += parseInt(lakeview.value);
+            }
+            if (nosmoking.checked) {
+                value += parseInt(nosmoking.value);
+            }
+
+            tagValue.value = value;
+
+            document.getElementById('searchForm').submit();
+        });
+        function setCheckboxState(tagValue) {
+            let freeWifi = document.getElementById('freeWifi');
+            let pool = document.getElementById('pool');
+            let breakfast = document.getElementById('breakfast');
+            let parking = document.getElementById('parking');
+            let gym = document.getElementById('gym');
+            let seaview = document.getElementById('seaview');
+            let lakeview = document.getElementById('lakeview');
+            let nosmoking = document.getElementById('nosmoking');
+
+            if (tagValue & parseInt(freeWifi.value)) {
+                freeWifi.checked = true;
+            }
+            if (tagValue & parseInt(pool.value)) {
+                pool.checked = true;
+            }
+            if (tagValue & parseInt(breakfast.value)) {
+                breakfast.checked = true;
+            }
+            if (tagValue & parseInt(parking.value)) {
+                parking.checked = true;
+            }
+            if (tagValue & parseInt(gym.value)) {
+                gym.checked = true;
+            }
+            if (tagValue & parseInt(seaview.value)) {
+                seaview.checked = true;
+            }
+            if (tagValue & parseInt(lakeview.value)) {
+                lakeview.checked = true;
+            }
+            if (tagValue & parseInt(nosmoking.value)) {
+                nosmoking.checked = true;
+            }
+        }
+
+        // 서버에서 받은 태그 값, 예를 들어 29 (와이파이 + 아침 + 주차장 + 체육관)
+        let tag = /*[[${param.tag}]]*/ "";
+        setCheckboxState(tag);
+    </script>
+
+
+</div>
+
+</html>
