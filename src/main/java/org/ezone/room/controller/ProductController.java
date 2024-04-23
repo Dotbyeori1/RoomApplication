@@ -27,8 +27,7 @@ public class ProductController {
     private final ReviewBoardService reviewBoardService;
     private final AccommodationService accommodationService;
     private final RoomService roomService;
-    @Autowired
-    DateManager dateManager;
+    private final DateManager dateManager;
 
 
     @GetMapping("{ano}")

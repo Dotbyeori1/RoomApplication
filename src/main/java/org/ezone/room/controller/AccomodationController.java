@@ -32,16 +32,11 @@ public class AccomodationController {
     // Seller에서의 Accommodation CRUD
 
     private final AccommodationService accommodationService;
-
     private final AccommodationRepository accommodationRepository;
-
     private final ImgService imgService;
-
     private final ReviewBoardService reviewBoardService;
     private final ReviewReplyService reviewReplyService;
-
-    @Autowired
-    private MemberRepository memberRepository; // 멤버조회가 필요하므로 추가
+    private final MemberRepository memberRepository; // 멤버조회가 필요하므로 추가
 
     // 숙소등록
     @GetMapping("register")

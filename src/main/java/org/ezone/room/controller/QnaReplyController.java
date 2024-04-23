@@ -21,9 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QnaReplyController {
 
-    @Autowired
-    private MemberRepository memberRepository; // Mmemer 조회가 필요하므로 추가
-
+    private final MemberRepository memberRepository; // Mmemer 조회가 필요하므로 추가
     private final QnaReplyService qnaReplyService; //의존성 자동주입
 
     @GetMapping(value = "qnareply/{bno}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -24,13 +24,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class RegisterServiceImpl implements RegisterService{
-    final RoomRepository repository;
-    final MemberRepository memberRepository;
-    final ReservationRepository reservationRepository;
-    final AccommodationRepository accommodationRepository;
 
-    @Autowired
-    ModelMapper modelMapper;
+    private final  RoomRepository repository;
+    private final  MemberRepository memberRepository;
+    private final  ReservationRepository reservationRepository;
+    private final  AccommodationRepository accommodationRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Long register(ReservationDTO rvDTO, RoomDTO roomDTO, Authentication authentication) {

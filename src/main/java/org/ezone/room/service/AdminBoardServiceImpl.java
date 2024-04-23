@@ -33,9 +33,7 @@ public class AdminBoardServiceImpl implements AdminBoardService{
     private final AdminReplyRepository adminReplyRepository;
     private final AdminBoardImgRepository adminBoardImgRepository;
     private final MemberRepository memberRepository; // Member 객체를 불러오기 위해 필요
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
 
     @Override

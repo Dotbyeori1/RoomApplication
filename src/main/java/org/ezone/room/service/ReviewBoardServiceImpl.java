@@ -25,29 +25,14 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class ReviewBoardServiceImpl implements ReviewBoardService {
 
-    @Autowired
-    private ReviewBoardRepository reviewBoardRepository;
-
-    @Autowired
-    private ReviewReplyService reviewReplyService;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private AccommodationRepository accommodationRepository;
-
-    @Autowired
-    private RoomRepository roomRepository;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private ReviewBoardImgRepository reviewBoardImgRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ReviewBoardRepository reviewBoardRepository;
+    private final  ReviewReplyService reviewReplyService;
+    private final  MemberRepository memberRepository;
+    private final  AccommodationRepository accommodationRepository;
+    private final  RoomRepository roomRepository;
+    private final  ReservationRepository reservationRepository;
+    private final  ReviewBoardImgRepository reviewBoardImgRepository;
+    private final  ModelMapper modelMapper;
 
 
     public AccommodationEntity findAccommodationByRoomId(Long rno) {

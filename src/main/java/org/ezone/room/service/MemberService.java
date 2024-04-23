@@ -1,5 +1,6 @@
 package org.ezone.room.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
 import org.ezone.room.dto.MemberFormDto;
@@ -16,16 +17,14 @@ import jakarta.transaction.Transactional;
 @Service
 @Log4j2
 @Transactional
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-//    @Autowired
-//    private JavaMailSender emailSender; //이메일 전송해주는 기능을 DI받음
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private JavaMailSender emailSender; //이메일 전송해주는 기능을 DI받음
 
     // 비밀번호 암호화
     @Autowired
@@ -74,13 +73,13 @@ public class MemberService {
         return member;
     }
 
-//    // 비밀번호 찾기 메일
-//    public void sendEmail(String to, String subject, String text){
-//        SimpleMailMessage message = new SimpleMailMessage(); //메일 객체 생성
-//        message.setTo(to);
-//        message.setSubject(subject);
-//        message.setText(text);
-//        emailSender.send(message); //이메일 전송 기능을 통해서 위에서 생성한 메일 객체를 전송
-//    }
+    // 비밀번호 찾기 메일
+    public void sendEmail(String to, String subject, String text){
+        SimpleMailMessage message = new SimpleMailMessage(); //메일 객체 생성
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        emailSender.send(message); //이메일 전송 기능을 통해서 위에서 생성한 메일 객체를 전송
+    }
 
-} //class
+}

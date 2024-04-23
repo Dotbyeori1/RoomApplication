@@ -30,16 +30,11 @@ import java.util.function.Function;
 @Log4j2
 public class TourBoardReviewServiceImpl implements TourBoardReviewService {
 
-    @Autowired
-    TourBoardReviewRepository tourBoardReviewRepository;
-    @Autowired
-    TourRepository tourRepository;
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    TourBoardReivewImgRepository tourBoardReivewImgRepository;
-    @Autowired
-    ModelMapper modelMapper;
+    private final TourBoardReviewRepository tourBoardReviewRepository;
+    private final TourRepository tourRepository;
+    private final MemberRepository memberRepository;
+    private final TourBoardReivewImgRepository tourBoardReivewImgRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public PageResultDTO<TourBoardReivewDTO, TourBoardReview> getTourReviewBoardsAndPageInfoByTourBoardId(Long tbno, PageRequestDTO pageRequestDTO) {

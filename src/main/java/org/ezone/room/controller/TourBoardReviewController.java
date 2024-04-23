@@ -31,7 +31,6 @@ public class TourBoardReviewController {
     private final TourRepository tourRepository;
     private final ImgService imgService;
 
-
     @PostMapping("register")
     public String register(@RequestParam("images") List<MultipartFile> images,
                            TourBoardDTO tourBoardDTO, TourBoardReivewDTO tourBoardReivewDTO) throws NotFoundException {

@@ -24,13 +24,12 @@ import java.util.List;
 @Service //빈등록
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService{
-    final RoomRepository repository;
-    final RoomImgRepository imgRepository;
-    final AccommodationRepository AccRepository;
-    final ReviewBoardRepository reviewBoardRepository;
-
-    @Autowired
-    ModelMapper modelMapper;
+    
+    private final RoomRepository repository;
+    private final RoomImgRepository imgRepository;
+    private final AccommodationRepository AccRepository;
+    private final ReviewBoardRepository reviewBoardRepository;
+    private final ModelMapper modelMapper;
 
     //room insert
     //방을 register 할때는 member로 숙소주인을 찾아내고 insert한다 라는 조건이 추가됨.

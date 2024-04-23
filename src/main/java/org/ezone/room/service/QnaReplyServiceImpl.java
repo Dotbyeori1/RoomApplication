@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class QnaReplyServiceImpl implements QnaReplyService {
 
     private final QnaReplyRepository qnaReplyRepository;
-
     private final MemberRepository memberRepository;
 
     @Override

@@ -24,9 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class QnaBoardController {
 
     private final QnaBoardService qnaBoardService; //의존성 주입 - RequiredArgsConstructor어노테이션 필요
-
-    @Autowired
-    private MemberRepository memberRepository; // 멤버조회가 필요하므로 추가
+    private final MemberRepository memberRepository; // 멤버조회가 필요하므로 추가
 
     @GetMapping("/list")
     public String list(PageRequestDTO pageRequestDTO, Model model){

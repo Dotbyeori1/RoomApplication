@@ -39,15 +39,11 @@ import java.util.List;
 @Log4j2
 @EnableJpaAuditing
 public class RegisterController {
-    final ReservationRepository reservationRepository;
-    final RoomRepository repository;
-    final ReviewBoardRepository reviewBoardRepository;
-    final MemberRepository memberRepository;
-    final AccommodationService accommodationService;
-    final RoomService roomService;
-
-    final RegisterService service;
-    ModelMapper modelMapper = new ModelMapper();
+    
+    private final ReviewBoardRepository reviewBoardRepository;
+    private final AccommodationService accommodationService;
+    private final RoomService roomService;
+    private final RegisterService service;
 
     @GetMapping("register")
     public String register(Long rno, Model model,ReservationDTO dto){

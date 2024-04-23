@@ -29,4 +29,6 @@ public class MemberFormDto {
     private int point; // 포인트
     private Role role; // 역할
     private String authProvider; // 인증 제공자 (카카오톡, 깃허브)
+
+    private boolean check15; // 자동로그인 체크 여부
 }

@@ -28,10 +28,7 @@ public class AccomodationImpl implements AccommodationService {
     private final AccommodationRepository accommodationRepository;
     private final AccommodationImgRepository accommodationImgRepository;
     private final MemberRepository memberRepository; // Member 객체를 불러오기 위해 필요
-
-    @Autowired
-    private ModelMapper modelMapper;
-
+    private final ModelMapper modelMapper;
 
     @Override
     public Long register(AccommodationDTO dto) {

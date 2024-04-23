@@ -24,11 +24,8 @@ import java.util.List;
 public class AdminBoardController {
 
     private final AdminBoardService adminBoardService;
-
     private final ImgService imgService;
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @GetMapping("{category}")
     public String list(@PathVariable("category") String category,
