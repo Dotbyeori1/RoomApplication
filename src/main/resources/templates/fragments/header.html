@@ -5,50 +5,53 @@
 <div th:fragment="header">
 
     <script type="text/javascript">
-
-        function goToLoginPage() {
-            localStorage.setItem('prevPage', window.location.href);
-            window.location.href = "/member/login";
-        }
-
-        // 헤더에서 토큰 정보를 가져와서 HTTP 요청 헤더에 추가하는 함수
-        function getHeaders() {
-            var headers = new Headers();
-            headers.append('Content-Type', 'application/json');
-            var token = localStorage.getItem('token');
-            if (token) {
-                headers.append('Authorization', 'Bearer ' + token);
+        function handleSession() {
+            const currentTime = new Date().getTime();
+            let storedTime = sessionStorage.getItem('accessPage_Time');
+            if (!storedTime) {
+                sessionStorage.setItem('accessPage_Time', currentTime.toString());
+                sessionStorage.setItem('accessPage', window.location.href);
+                return true;
             }
-            return headers;
+
+            const elapsedTime = currentTime - Number(storedTime);
+            // 10분(600,000밀리초)가 지났는지 확인
+            if (elapsedTime > 60000 * 10) {
+                sessionStorage.removeItem('accessPage_Time');
+                sessionStorage.removeItem('accessPage');
+                sessionStorage.setItem('accessPage_Time', currentTime.toString());
+                sessionStorage.setItem('accessPage', window.location.href);
+                return true;
+            } else {
+                return false;
+            }
         }
 
-        //인증이 필요한 요청을 보내는 함수
-        function authenticatedRequest() {
-            fetch('/auth', {
-                method: 'GET',
-                headers: getHeaders()
-            }).then(function (response) {
-                if (response.ok) {
-                    response.json().then(function (data) {
-                        localStorage.removeItem('token');
-                        var token = data.token; // 서버에서 반환한 토큰 값
-                        localStorage.setItem('token', token); // 토큰을 localStorage에 저장
-                    });
-                } else {
-                    response.json().then(function (data) {
-                        console.log(data.error);
-                        localStorage.removeItem('token');
-                    });
-                }
-            });
+        if (localStorage.getItem('token')) { // 토큰이 있으면
+            if (handleSession()) {
+                window.location.href = "/";
+            }
         }
-
-        authenticatedRequest(); // 인증이 필요한 요청함수 바로 보내기
 
         // 로그아웃 시 토큰을 제거
         function logout() {
             localStorage.removeItem('token');
-            location.href = "/member/logout";
+            sessionStorage.removeItem("accessPage");
+            sessionStorage.removeItem('accessPage_Time');
+            window.location.href = "/member/logout";
+        }
+
+        // 로그인 당시의 페이지 위치를 저장
+        function goToLoginPage() {
+            let currentPagePath = window.location.pathname;
+            let prevPage = sessionStorage.getItem('prevPage');
+
+            if (!prevPage || currentPagePath !== "/member/login") {
+                sessionStorage.removeItem('prevPage');
+                sessionStorage.setItem('prevPage', window.location.href);
+            }
+
+            window.location.href = "/member/login";
         }
 
     </script>
