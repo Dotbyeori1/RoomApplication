@@ -122,7 +122,8 @@
     <script th:inline="javascript">
         $(document).ready(function () {
 
-            var bno = [[${dto.bno}]];
+            var bno = /*[[${dto.bno}]]*/'';
+            console.log(bno);
 
 
             //날짜 처리를 위한 함수
@@ -169,15 +170,13 @@
                 }
                 console.log(qnaReply);
                 $.ajax({
-                    url: '/qna/',
+                    url: '/qna',
                     method: 'post',
                     data: JSON.stringify(qnaReply),
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
                         console.log(data);
-
-                        var newRno = parseInt(data);
 
                         alert("댓글이 등록되었습니다.")
                         //댓글 입력하는 부분 초기화 시키기
@@ -190,32 +189,6 @@
 
             //모달 창
             var modal = $('.modal');
-
-            $(".replySave").click(function () {
-
-                var qnaReply = {
-                    bno: bno,
-                    text: $('input[name="replyText"]').val(),
-                    replyer: $('input[name="replyer"]').val()
-                }
-                console.log(qnaReply);
-                $.ajax({
-                    url: '/qna/',
-                    method: 'post',
-                    data: JSON.stringify(qnaReply),
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (data) {
-                        console.log(data);
-
-                        var newRno = parseInt(data);
-
-                        alert(newRno + "번 댓글이 등록되었습니다.")
-                        modal.modal('hide');
-                        loadJSONData();
-                    }
-                })
-            });
 
             $('.replyList').on("click", ".list-group-item", function () {
                 var rno = $(this).data("rno");
