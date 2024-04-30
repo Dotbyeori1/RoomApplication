@@ -1,11 +1,8 @@
-package org.ezone.room.service;
+package org.ezone.room.security;
 
 import lombok.RequiredArgsConstructor;
-import org.ezone.room.security.CustomUserDetails;
 import org.ezone.room.entity.Member;
 import org.ezone.room.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

@@ -22,8 +22,14 @@
     <section class="hotel-list-area section-bg-2 pat-50 pab-100">
         <div class="container">
             <div class="shop-contents-wrapper mt-5">
+                <div class="shop-icon">
+                    <div class="shop-icon-sidebar">
+                        <i class="las la-bars"></i>
+                    </div>
+                </div>
                 <div class="shop-sidebar-content">
                     <div class="shop-close-content">
+                        <div class="shop-close-content-icon"> <i class="las la-times"></i> </div>
                         <div class="single-shop-left bg-white radius-10 mt-4">
                             <form th:action="@{/product/list}" method="get" id="searchForm"
                                   onsubmit="disableDaterangeInput()" class="single-shop-left-inner mt-4">

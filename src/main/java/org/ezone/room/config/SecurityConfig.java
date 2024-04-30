@@ -2,7 +2,7 @@ package org.ezone.room.config;
 
 import lombok.RequiredArgsConstructor;
 import org.ezone.room.security.*;
-import org.ezone.room.service.CustomUserDetailsService;
+import org.ezone.room.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
