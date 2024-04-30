@@ -17,20 +17,19 @@ import jakarta.transaction.Transactional;
 @Service
 @Log4j2
 @Transactional
-@AllArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    private JavaMailSender emailSender; //이메일 전송해주는 기능을 DI받음
+    private final JavaMailSender emailSender; //이메일 전송해주는 기능을 DI받음
 
-    // 비밀번호 암호화
     @Autowired
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JavaMailSender emailSender) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailSender = emailSender;
     }
 
     // 회원가입
@@ -38,6 +37,7 @@ public class MemberService {
         vaildateDuplicateMember(member);
         return  memberRepository.save(member);
     }
+
     // 중복 회원 가입 막기
     private void vaildateDuplicateMember(Member member){
         Member findMember = memberRepository.findByEmail(member.getEmail());

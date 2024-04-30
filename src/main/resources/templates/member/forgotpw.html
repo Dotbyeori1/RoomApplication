@@ -19,72 +19,69 @@
         <div class="login-wrapper-flex">
             <div class="login-wrapper-contents login-padding">
                 <p id="message" class="text-danger"></p>
-                <form action="/member/forgotpw" class="login-wrapper-contents-form custom-form" method="post">
+                <form id="forgotPwForm" action="/member/forgotpw" class="login-wrapper-contents-form custom-form" method="post">
                     <div class="form-group">
                         <strong class="sub_title" >비밀번호 초기화</strong>
                         <label class="label-title mb-3" th:for="email"></label>
                         <input class="form-control" type="email" id="email" name="email" placeholder="이메일을 입력해주세요">
+                        <label class="label-title mb-3" th:for="name"></label>
+                        <input class="form-control" type="text" id="name" name="name" placeholder="성함을 입력해주세요.">
                         <p id="message_email" class="text-danger"></p>
+                        <p id="message_name" class="text-danger"></p>
                     </div>
 
-                    <button id="login" class="submit-btn w-100 mt-4" type="button"> 확인 </button>
+                    <button id="check" class="submit-btn w-100 mt-4" type="button"> 확인 </button>
                 </form>
-                <div>
-                    <p th:if="${message}" th:text="${message}" class="alert alert-success"></p>
-                    <p th:if="${error}" th:text="${error}" class="alert alert-danger"></p>
-                    <p th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger"></p>
-                </div>
-
             </div>
         </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#login').click(function () {
-                var email = $('#email').val();
-                var password = $('#password').val();
-                var formData = {
-                    email: email,
-                    password: password
-                };
+            $('#check').click(function () {
+                let email = $('#email').val();
+                let name = $('#name').val();
 
                 if (!email) {
-                    $('#message_email').text('이메일을 입력해주세요');
+                    $('#message_email').text('이메일을 입력해주세요.');
                     return;
                 } else {
                     $('#message_email').text('');
                 }
 
-                var headers = {}; // headers 변수를 정의합니다.
+                if(!name){
+                    $('#message_name').text('성함을 입력해주세요.');
+                    return;
+                } else {
+                    $('#message_name').text('');
+                }
+
+                $('#message').text('검증 및 메일 전송 중 입니다.');
+
+                let headers = {}; // headers 변수를 정의합니다.
                 headers[$('meta[name=csrf-header-name]').attr('content')] = $('meta[name=csrf-token]').attr('content');
 
                 $.ajax({
                     type: 'POST',
                     url: '/member/forgotpw',
-                    data: {email: email},
+                    data: {email: email, name : name},
                     contentType: 'application/x-www-form-urlencoded',
-                    /*data: formData,
-                    processData: false,
-                    contentType: false,*/
                     headers: headers,
                     success: function (data) {
-                        $('#message').text('새 비밀번호가 이메일로 전송되었습니다. 테스트 계정은 비밀번호가 변경되지 않습니다.');
-                        setTimeout(function() {
-                            window.location.href = '/member/login'; // 로그인 페이지로 이동
-                        }, 1000); // 1초 후 이동
+                        alert('새 비밀번호가 이메일로 전송되었습니다.');
+                        window.location.href = '/member/login'; // 로그인 페이지로 이동
                     },
                     error: function (xhr) {
-                        var responseDTO = JSON.parse(xhr.responseText);
+                        let responseDTO = JSON.parse(xhr.responseText);
                         $('#message').text(responseDTO.error);
                     }
                 });
             });
 
 
-            $('form#loginBtn').on('keypress', function (e) {
+            $('form#forgotPwForm').on('keypress', function (e) {
                 if (e.which === 13) { // Enter 키를 감지
                     e.preventDefault(); // 기본 이벤트 (폼 제출)를 중단
-                    $('#login').trigger('click'); // 로그인 버튼 클릭 이벤트를 트리거
+                    $('#check').trigger('click'); // 로그인 버튼 클릭 이벤트를 트리거
                 }
             });
 

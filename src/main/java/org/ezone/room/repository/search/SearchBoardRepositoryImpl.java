@@ -271,10 +271,10 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
     public Page<Object[]> searchPageAccommodation(String[] type, String keyword, String category, String region,
                                                   LocalDate startDate, LocalDate endDate, Integer inputedMinPrice, Integer inputedMaxPrice,
                                                   Integer tag, Pageable pageable) {
+
         QAccommodationEntity accommodation = QAccommodationEntity.accommodationEntity;
         QRoomEntity roomEntity = QRoomEntity.roomEntity;
         QReservationEntity reservationEntity = QReservationEntity.reservationEntity;
-
 
         JPQLQuery<Tuple> query = from(accommodation)
                 .select(accommodation, roomEntity, roomEntity.price.min())
